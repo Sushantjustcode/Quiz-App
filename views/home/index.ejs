@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-12 mb-4 text-center">
+    <h1 class="display-4">Available Quizzes</h1>
+    <p class="lead">Select a quiz to test your knowledge.</p>
+  </div>
+</div>
+
+<div class="row">
+  <% if (quizzes.length > 0) { %>
+    <% quizzes.forEach(quiz => { %>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= quiz.title %></h5>
+            <p class="card-text"><%= quiz.description %></p>
+            <p class="text-muted"><small><%= quiz.questions.length %> Questions</small></p>
+          </div>
+          <div class="card-footer bg-white border-top-0">
+            <a href="/quiz/<%= quiz._id %>" class="btn btn-primary w-100">Take Quiz</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="col-12 text-center">
+      <div class="alert alert-info">No quizzes available at the moment.</div>
+    </div>
+  <% } %>
+</div>

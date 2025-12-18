@@ -1,0 +1,96 @@
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Edit Quiz: <%= quiz.title %></h2>
+      <a href="/admin/quizzes" class="btn btn-secondary">Back to List</a>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">Quiz Details</div>
+  <div class="card-body">
+    <form action="/admin/quiz/<%= quiz._id %>" method="POST">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title" value="<%= quiz.title %>" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input type="text" class="form-control" id="description" name="description" value="<%= quiz.description %>">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success">Update Details</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Questions (<%= quiz.questions.length %>)</span>
+    <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addQuestionForm">
+      + Add New Question
+    </button>
+  </div>
+  
+  <div class="collapse p-3 bg-light border-bottom" id="addQuestionForm">
+    <form action="/admin/quiz/<%= quiz._id %>/question" method="POST">
+      <h5 class="mb-3">New Question</h5>
+      <div class="mb-3">
+        <label class="form-label">Question Text</label>
+        <input type="text" class="form-control" name="questionText" required>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Option 1 (Index 0)</label>
+          <input type="text" class="form-control mb-2" name="options[]" required>
+          
+          <label class="form-label">Option 2 (Index 1)</label>
+          <input type="text" class="form-control mb-2" name="options[]" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Option 3 (Index 2)</label>
+          <input type="text" class="form-control mb-2" name="options[]" required>
+          
+          <label class="form-label">Option 4 (Index 3)</label>
+          <input type="text" class="form-control mb-2" name="options[]" required>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Correct Answer Index (0-3)</label>
+        <input type="number" class="form-control" name="correctAnswer" min="0" max="3" required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Add Question</button>
+    </form>
+  </div>
+
+  <div class="card-body">
+    <% if (quiz.questions.length > 0) { %>
+      <div class="list-group">
+        <% quiz.questions.forEach((q, index) => { %>
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Q<%= index + 1 %>: <%= q.questionText %></h5>
+              <div>
+                <a href="/admin/quiz/<%= quiz._id %>/question/<%= q._id %>" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form action="/admin/quiz/<%= quiz._id %>/question/<%= q._id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Delete this question?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+            <p class="mb-1">
+              Options: <%= q.options.join(', ') %> <br>
+              Correct Index: <strong><%= q.correctAnswer %></strong> (<%= q.options[q.correctAnswer] %>)
+            </p>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="text-muted text-center my-3">No questions added yet.</p>
+    <% } %>
+  </div>
+</div>

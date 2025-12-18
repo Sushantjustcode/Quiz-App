@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-12 mb-4">
+    <h2>Admin Dashboard</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card bg-primary text-white mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Quizzes</h5>
+        <p class="display-4"><%= quizCount %></p>
+      </div>
+      <div class="card-footer bg-transparent border-top-0">
+        <a href="/admin/quizzes" class="text-white text-decoration-none">Manage Quizzes &rarr;</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card bg-success text-white mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Quick Actions</h5>
+        <div class="d-grid gap-2">
+          <a href="/admin/quizzes/create" class="btn btn-light text-success fw-bold">Create New Quiz</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

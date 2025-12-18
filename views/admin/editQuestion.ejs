@@ -1,0 +1,44 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3>Edit Question</h3>
+      </div>
+      <div class="card-body">
+        <form action="/admin/quiz/<%= quizId %>/question/<%= question._id %>" method="POST">
+          <div class="mb-3">
+            <label class="form-label">Question Text</label>
+            <input type="text" class="form-control" name="questionText" value="<%= question.questionText %>" required>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Option 1 (Index 0)</label>
+              <input type="text" class="form-control mb-2" name="options[]" value="<%= question.options[0] %>" required>
+              
+              <label class="form-label">Option 2 (Index 1)</label>
+              <input type="text" class="form-control mb-2" name="options[]" value="<%= question.options[1] %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Option 3 (Index 2)</label>
+              <input type="text" class="form-control mb-2" name="options[]" value="<%= question.options[2] %>" required>
+              
+              <label class="form-label">Option 4 (Index 3)</label>
+              <input type="text" class="form-control mb-2" name="options[]" value="<%= question.options[3] %>" required>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Correct Answer Index (0-3)</label>
+            <input type="number" class="form-control" name="correctAnswer" min="0" max="3" value="<%= question.correctAnswer %>" required>
+          </div>
+          
+          <div class="d-flex justify-content-between">
+            <a href="/admin/quiz/<%= quizId %>/edit" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Question</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

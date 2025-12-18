@@ -1,0 +1,120 @@
+<div id="start-screen" class="text-center py-5">
+  <h1><%= quiz.title %></h1>
+  <p class="lead"><%= quiz.description %></p>
+  <div class="alert alert-warning d-inline-block text-start">
+    <strong><i class="bi bi-exclamation-triangle"></i> EXAM RULES:</strong>
+    <ul class="mb-0 mt-2">
+      <li>The exam will run in <strong>Fullscreen Mode</strong>.</li>
+      <li>Do not exit fullscreen.</li>
+      <li>Do not switch tabs or minimize the window.</li>
+      <li>Do not press ESC.</li>
+      <li>Any violation will <strong>automatically submit</strong> your answers.</li>
+    </ul>
+  </div>
+  <br><br>
+  <button id="start-btn" class="btn btn-lg btn-danger px-5">Start Exam</button>
+</div>
+
+<div id="quiz-content" class="quiz-container" style="display: none;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><%= quiz.title %></h3>
+    <span class="badge bg-secondary">Exam Mode Active</span>
+  </div>
+
+  <form id="quiz-form" action="/quiz/<%= quiz._id %>/submit" method="POST">
+    <% quiz.questions.forEach((question, index) => { %>
+      <div class="card question-card">
+        <div class="card-header">
+          Question <%= index + 1 %>
+        </div>
+        <div class="card-body">
+          <p class="fw-bold"><%= question.questionText %></p>
+          
+          <div class="options-list">
+            <% question.options.forEach((option, optIndex) => { %>
+              <div>
+                <input type="radio" name="answers[<%= index %>]" id="q<%= index %>o<%= optIndex %>" value="<%= optIndex %>">
+                <label class="option-label" for="q<%= index %>o<%= optIndex %>">
+                  <%= option %>
+                </label>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+
+    <div class="text-center mb-5">
+      <button type="submit" class="btn btn-success btn-lg px-5">Submit Exam</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const startBtn = document.getElementById('start-btn');
+  const startScreen = document.getElementById('start-screen');
+  const quizContent = document.getElementById('quiz-content');
+  const quizForm = document.getElementById('quiz-form');
+  let isExamActive = false;
+
+  function submitQuiz() {
+    if (!isExamActive) return;
+    isExamActive = false; 
+    
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'forced_submission';
+    input.value = 'true';
+    quizForm.appendChild(input);
+    
+    alert('Exam violation detected! Auto-submitting...');
+    quizForm.submit();
+  }
+
+  startBtn.addEventListener('click', () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else if (elem.webkitRequestFullscreen) { 
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+
+    startScreen.style.display = 'none';
+    quizContent.style.display = 'block';
+    isExamActive = true;
+  });
+
+
+  document.addEventListener('fullscreenchange', () => {
+    if (isExamActive && !document.fullscreenElement) {
+      submitQuiz();
+    }
+  });
+  
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (isExamActive && !document.webkitFullscreenElement) submitQuiz();
+  });
+  document.addEventListener('mozfullscreenchange', () => {
+    if (isExamActive && !document.mozFullScreenElement) submitQuiz();
+  });
+  document.addEventListener('msfullscreenchange', () => {
+    if (isExamActive && !document.msFullscreenElement) submitQuiz();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (isExamActive && document.hidden) {
+      submitQuiz();
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    if (isExamActive) {
+      submitQuiz();
+    }
+  });
+  
+</script>
